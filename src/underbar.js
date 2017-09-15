@@ -110,14 +110,46 @@
 
   // Produce a duplicate-free version of the array.
   _.uniq = function(array, isSorted, iterator) {
-  };
+    if (arguments.length === 1) {isSorted = false; iterator = _.identity;}
+    if (arguments.length > 1) {
+      if (typeof isSorted !== 'boolean') {
+        iterator = isSorted; 
+        isSorted = false;
+      }
 
+    }
+    var results = [];
+
+    _.each(array, function(item, index, array) {
+      var value = item;
+      var transformed;
+
+      if (iterator(value)) {
+        if (results.includes(value) === false) {
+          results.push(value);
+        } 
+      }
+    });
+    return results;
+  };
 
   // Return the results of applying an iterator to each element.
   _.map = function(collection, iterator) {
+    var results = [];
     // map() is a useful primitive iteration function that works a lot
     // like each(), but in addition to running the operation on all
     // the members, it also maintains an array of results.
+    if (Array.isArray(collection)) {
+      for (var i = 0; i < collection.length; i++) {
+        results.push(iterator(collection[i], i, collection));
+      }
+    } else {
+      for (var key in collection) {
+        var value = collection[key];
+        results.push(iterator(value, key, collection));
+      }
+    }
+    return results;
   };
 
   /*
@@ -159,7 +191,20 @@
   //   }); // should be 5, regardless of the iterator function passed in
   //          No accumulator is given so the first element is used.
   _.reduce = function(collection, iterator, accumulator) {
+    if (arguments.length < 3) {
+      accumulator = collection[0];
+      for (var i = 1; i < collection.length; i++) {
+        accumulator = iterator(accumulator, collection[i], i);
+      }
+      return accumulator;
+    } else {
+      for (var i = 0; i < collection.length; i++) {
+        accumulator = iterator(accumulator, collection[i], i);
+      }
+      return accumulator;
+    }   
   };
+
 
   // Determine if the array or object contains a given value (using `===`).
   _.contains = function(collection, target) {
