@@ -217,7 +217,6 @@
       if (wasFound) {
         return true;
       }
-      console.log(wasFound, item);
       return item === target;
     }, false);
   };
@@ -240,6 +239,15 @@
   // Determine whether any of the elements pass a truth test. If no iterator is
   // provided, provide a default one
   _.some = function(collection, iterator) {
+    iterator = iterator || _.identity;
+
+    if (Object.keys(collection).length === 0) {
+      return false;
+    }
+
+    return !_.every(collection, function(item) {
+      return !iterator(item);
+    }) 
     // TIP: There's a very clever way to re-use every() here.
   };
 
