@@ -193,20 +193,20 @@
   //     return total + number * number;
   //   }); // should be 5, regardless of the iterator function passed in
   //          No accumulator is given so the first element is used.
-  _.reduce = function(collection, iterator, accumulator) {
-    if (arguments.length < 3) {
-      accumulator = collection[0];
-      for (var i = 1; i < collection.length; i++) {
-        accumulator = iterator(accumulator, collection[i], i);
+ _.reduce = function(collection, iterator=_.identity, initialValue) {
+    var accumulator = initialValue;
+    var initializing = accumulator === undefined;
+    _.each(collection, function(item, index, iteratedObj) {
+      if (initializing) {
+        initializing = false;
+        accumulator = item;
+      } else {
+        accumulator = iterator(accumulator, item, index, iteratedObj);
       }
-      return accumulator;
-    } else {
-      for (var i = 0; i < collection.length; i++) {
-        accumulator = iterator(accumulator, collection[i], i);
-      }
-      return accumulator;
-    }   
+    })
+    return accumulator;
   };
+
 
 
   // Determine if the array or object contains a given value (using `===`).
@@ -217,6 +217,7 @@
       if (wasFound) {
         return true;
       }
+      console.log(wasFound, item);
       return item === target;
     }, false);
   };
@@ -224,6 +225,15 @@
 
   // Determine whether all of the elements match a truth test.
   _.every = function(collection, iterator) {
+    iterator = iterator || _.identity;
+
+    return _.reduce(collection, function(a, b) {
+       if (a) {
+          return iterator(b) ? true : false;
+       } else {
+        return false;
+       }
+    }, true)
     // TIP: Try re-using reduce() here.
   };
 
