@@ -116,20 +116,27 @@
         iterator = isSorted; 
         isSorted = false;
       }
-
+    console.log('the iterator function is ' + iterator);
+    console.log('isSorted is ' + isSorted);
     }
+    var pairs = {};
     var results = [];
 
     _.each(array, function(item, index, array) {
-      var value = item;
-      var transformed;
+      
+      var value = iterator(item);
 
-      if (iterator(value)) {
-        if (results.includes(value) === false) {
-          results.push(value);
-        } 
-      }
+      console.log('the item is ' + item + ',  and the transformed value is ' + value);
+      if (!pairs[value]) {
+        pairs[value] = [item];
+        results.push(item);
+      } else {
+        pairs[value].push(item);
+      } 
+      
     });
+    console.log(pairs);
+    console.log(results);
     return results;
   };
 
