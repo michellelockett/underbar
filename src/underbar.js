@@ -116,8 +116,6 @@
         iterator = isSorted; 
         isSorted = false;
       }
-    console.log('the iterator function is ' + iterator);
-    console.log('isSorted is ' + isSorted);
     }
     var pairs = {};
     var results = [];
@@ -126,7 +124,6 @@
       
       var value = iterator(item);
 
-      console.log('the item is ' + item + ',  and the transformed value is ' + value);
       if (!pairs[value]) {
         pairs[value] = [item];
         results.push(item);
@@ -135,8 +132,7 @@
       } 
       
     });
-    console.log(pairs);
-    console.log(results);
+    
     return results;
   };
 
