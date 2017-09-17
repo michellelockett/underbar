@@ -344,7 +344,23 @@
   // already computed the result for the given argument and return that value
   // instead if possible.
   _.memoize = function(func) {
-  };
+
+    var cache = func[cache] || {};
+
+    return function() {
+      var args = Array.prototype.slice.call(arguments);
+      var stringArgs = JSON.stringify(arguments);
+      
+      if (cache[stringArgs] === undefined) {
+        cache[stringArgs] = func.apply(this, args);
+      }
+
+      return cache[stringArgs];
+      
+    }
+  }
+
+  
 
   // Delays a function for the given number of milliseconds, and then calls
   // it with the arguments supplied.
